@@ -1,14 +1,14 @@
 .looper-left-arrow {
-    width: 7px;
-    height: 22px;
-    background: #e90a0a;
+    width: 14px;
+    height: 14px;
+    background: #00c91e;
     position: absolute;
-    top: -11px;
+    top: -7px;
     z-index: 1000;
     cursor: pointer;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     box-sizing: content-box;
-    border-radius: 1px;
+    border-radius: 50%;
     background-clip: content-box;
 }
 
