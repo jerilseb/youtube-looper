@@ -1,0 +1,21 @@
+.looper-left-arrow {
+    width: 7px;
+    height: 22px;
+    background: #e90a0a;
+    position: absolute;
+    top: -11px;
+    z-index: 1000;
+    cursor: pointer;
+    border: 1px solid transparent;
+    box-sizing: content-box;
+    border-radius: 1px;
+    background-clip: content-box;
+}
+
+.looper-left-arrow.arrow1 {
+    left: 0px;
+}
+
+.looper-left-arrow.arrow2 {
+    right: 0px;
+}

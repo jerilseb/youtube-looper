@@ -1,0 +1,15 @@
+{
+  "name": "looper",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "parcel watch src/main.js -d extension/js",
+    "build": "parcel build src/main.js -d extension/js --no-source-maps"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}
