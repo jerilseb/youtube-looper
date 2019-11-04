@@ -3,15 +3,13 @@
     "name": "Looper",
     "description": "Loop videos between selected points",
     "version": "1.0",
-  
+    "minimum_chrome_version": "66.0",
     "browser_action": {
       "default_icon": "icons/32.png"
     },
-  
     "permissions": [
       "activeTab"
     ],
-  
     "content_scripts": [
       {
         "matches": ["https://youtube.com/*", "https://www.youtube.com/*"],

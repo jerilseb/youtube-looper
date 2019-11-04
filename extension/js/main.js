@@ -140,24 +140,29 @@ window.addEventListener('load', function (_) {
     return false;
   };
 
-  var shiftX = arrow1.offsetWidth / 2;
+  var arrowWidth = arrow1.offsetWidth;
+  var shiftX = arrowWidth / 2;
   arrow1.addEventListener('mousedown', function (event) {
     event.preventDefault();
     var arrow2Left = arrow2.getBoundingClientRect().left;
     var containerLeft = container.getBoundingClientRect().left;
+    var containerWidth = container.offsetWidth;
+    var newLeft = 0;
 
     var onMouseMove = function onMouseMove(event) {
       if (event.clientX < arrow2Left) {
-        var newLeft = event.clientX - shiftX - containerLeft;
-        var rightEdge = container.offsetWidth - arrow1.offsetWidth;
-        if (newLeft < 0) newLeft = 0;
-        if (newLeft > rightEdge) newLeft = rightEdge;
+        newLeft = event.clientX - shiftX - containerLeft;
+        var rightEdge = containerWidth - arrowWidth;
+        if (newLeft < -2) newLeft = -2;
+        if (newLeft > rightEdge + 2) newLeft = rightEdge + 2;
         arrow1.style.left = newLeft + 'px';
       }
     };
 
     function onMouseUp(event) {
       event.preventDefault();
+      var percentage = (100 * newLeft / containerWidth).toFixed(2);
+      arrow1.style.left = percentage + '%';
       document.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('mousemove', onMouseMove);
     }
@@ -169,21 +174,25 @@ window.addEventListener('load', function (_) {
     event.preventDefault();
     var arrow1Right = arrow1.getBoundingClientRect().right;
     var containerLeft = container.getBoundingClientRect().left;
+    var containerWidth = container.offsetWidth;
+    var newLeft = 0;
 
     var onMouseMove = function onMouseMove(event) {
       arrow1._pos = event.clientX;
 
       if (event.clientX > arrow1Right) {
-        var newLeft = event.clientX - shiftX - containerLeft;
-        var rightEdge = container.offsetWidth - arrow2.offsetWidth;
-        if (newLeft < 0) newLeft = 0;
-        if (newLeft > rightEdge) newLeft = rightEdge;
+        newLeft = event.clientX - shiftX - containerLeft;
+        var rightEdge = containerWidth - arrowWidth;
+        if (newLeft < -2) newLeft = -2;
+        if (newLeft > rightEdge + 2) newLeft = rightEdge + 2;
         arrow2.style.left = newLeft + 'px';
       }
     };
 
     function onMouseUp(event) {
       event.preventDefault();
+      var percentage = (100 * newLeft / containerWidth).toFixed(2);
+      arrow2.style.left = percentage + '%';
       document.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('mousemove', onMouseMove);
     }
@@ -191,6 +200,32 @@ window.addEventListener('load', function (_) {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+  var ro = new ResizeObserver(function (entries) {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var entry = _step.value;
+        console.log(entry);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return != null) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+  });
+  ro.observe(container);
 });
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -220,7 +255,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54647" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51747" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

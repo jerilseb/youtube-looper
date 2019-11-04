@@ -19,20 +19,23 @@ window.addEventListener('load', _ => {
   arrow1.ondragstart = () => false;
   arrow2.ondragstart = () => false;
 
-  let shiftX = arrow1.offsetWidth / 2;
+  let arrowWidth = arrow1.offsetWidth;
+  let shiftX = arrowWidth / 2;
 
   arrow1.addEventListener('mousedown', event => {
     event.preventDefault();
     const arrow2Left = arrow2.getBoundingClientRect().left;
     const containerLeft = container.getBoundingClientRect().left;
+    let containerWidth = container.offsetWidth;
+    let newLeft = 0;
   
     const onMouseMove = event => {
       if(event.clientX < arrow2Left) {
-        let newLeft = event.clientX - shiftX - containerLeft;
-        let rightEdge = container.offsetWidth - arrow1.offsetWidth;
+        newLeft = event.clientX - shiftX - containerLeft;
+        let rightEdge = containerWidth - arrowWidth;
   
-        if (newLeft < 0) newLeft = 0;
-        if (newLeft > rightEdge) newLeft = rightEdge;
+        if (newLeft < -2) newLeft = -2;
+        if (newLeft > rightEdge + 2) newLeft = rightEdge + 2;
   
         arrow1.style.left = newLeft + 'px';
       }
@@ -40,6 +43,8 @@ window.addEventListener('load', _ => {
 
     function onMouseUp(event) {
       event.preventDefault();
+      let percentage = (100 * newLeft / containerWidth).toFixed(2);
+      arrow1.style.left = percentage + '%';
       document.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('mousemove', onMouseMove);
     }
@@ -52,15 +57,17 @@ window.addEventListener('load', _ => {
     event.preventDefault();
     const arrow1Right = arrow1.getBoundingClientRect().right;
     const containerLeft = container.getBoundingClientRect().left;
+    let containerWidth = container.offsetWidth;
+    let newLeft = 0;
   
     const onMouseMove = event => {
       arrow1._pos = event.clientX;
       if(event.clientX > arrow1Right) {
-        let newLeft = event.clientX - shiftX - containerLeft;
-        let rightEdge = container.offsetWidth - arrow2.offsetWidth;
+        newLeft = event.clientX - shiftX - containerLeft;
+        let rightEdge = containerWidth - arrowWidth;
 
-        if (newLeft < 0) newLeft = 0;
-        if (newLeft > rightEdge) newLeft = rightEdge;
+        if (newLeft < -2) newLeft = -2;
+        if (newLeft > rightEdge + 2) newLeft = rightEdge + 2;
 
         arrow2.style.left = newLeft + 'px';
       }
@@ -68,6 +75,8 @@ window.addEventListener('load', _ => {
 
     function onMouseUp(event) {
       event.preventDefault();
+      let percentage = (100 * newLeft / containerWidth).toFixed(2);
+      arrow2.style.left = percentage + '%';
       document.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('mousemove', onMouseMove);
     }
@@ -75,4 +84,11 @@ window.addEventListener('load', _ => {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  const ro = new ResizeObserver(entries => {
+    for (let entry of entries) {
+      console.log(entry);
+    }
+  });
+  ro.observe(container);
 });
