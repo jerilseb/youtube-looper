@@ -1,21 +1,49 @@
-.looper-left-arrow {
-    width: 12px;
-    height: 12px;
-    background: #00c91e;
+.looper-marker {
+    width: 14px;
+    height: 14px;
+    background: #f00;
     position: absolute;
     top: -6px;
     z-index: 1000;
     cursor: pointer;
-    border: 1px solid transparent;
-    box-sizing: content-box;
+    box-sizing: border-box;
+    border: 4px solid #eeeeee;
     border-radius: 50%;
-    background-clip: content-box;
 }
 
-.looper-left-arrow.arrow1 {
-    left: -3px;
+:fullscreen .looper-marker {
+    width: 18px;
+    height: 18px;
+    top: -8px;
+    border: 5px solid #eeeeee;
 }
 
-.looper-left-arrow.arrow2 {
-    right: -3px;
+.looper-marker.leftMarker {
+    left: -5px;
+}
+
+.looper-marker.rightMarker {
+    right: -5px;
+}
+
+.ytp-loop-icon {
+    width: 10px;
+    height: 10px;
+    border: 3.5px solid #dddddd;
+    border-radius: 50%;
+    margin: auto;
+}
+
+:fullscreen  .ytp-loop-icon {
+    width: 15px;
+    height: 15px;
+    border: 4px solid #dddddd;
+}
+
+:fullscreen  .ytp-loop-icon.active {
+    border: 4px solid #f00;
+}
+
+.ytp-loop-icon.active {
+    border: 3.5px solid #f00;
 }

@@ -121,111 +121,166 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 window.addEventListener('load', function (_) {
   console.log("Load event from content script"); // console.log(/youtube/.test(location.href));
 
-  var video = document.getElementsByTagName('video')[0]; // let progressBar = document.querySelector('.ytp-progress-bar-container');
-
   var container = document.querySelector('div.ytp-chrome-bottom');
+  var video = document.getElementsByTagName('video')[0];
   console.log(container);
-  var arrow1 = document.createElement('div');
-  arrow1.setAttribute("class", "looper-left-arrow arrow1");
-  container.appendChild(arrow1);
-  var arrow2 = document.createElement('div');
-  arrow2.setAttribute("class", "looper-left-arrow arrow2");
-  container.appendChild(arrow2);
+  var mainInterval = null;
+  var leftMarker = null;
+  var rightMarker = null; // if(video.readyState > 1) {
+  //   setup(video.duration);
+  // } else {
+  //   video.addEventListener('loadedmetadata', () => {
+  //     setup(video.duration);
+  //   });
+  // }
 
-  arrow1.ondragstart = function () {
-    return false;
-  };
+  var controlsActive = false;
+  var rightControls = container.querySelector('.ytp-right-controls');
+  console.log(rightControls);
+  var toggleButton = document.createElement('button');
+  toggleButton.setAttribute('class', 'ytp-loop-button ytp-button');
+  toggleButton.setAttribute('title', 'Toggle loop controls');
+  toggleButton.setAttribute('aria-haspopup', true);
+  toggleButton.setAttribute('aria-label', 'Toggle loop controls');
+  var loopIcon = document.createElement('div');
+  loopIcon.setAttribute('class', 'ytp-loop-icon');
+  toggleButton.appendChild(loopIcon);
+  var subtitlesButton = container.querySelector('.ytp-subtitles-button');
+  rightControls.insertBefore(toggleButton, subtitlesButton);
+  toggleButton.addEventListener('click', function (e) {
+    controlsActive = !controlsActive;
 
-  arrow2.ondragstart = function () {
-    return false;
-  };
+    if (controlsActive) {
+      loopIcon.classList.add('active');
+      insertMarkers(video.duration);
+    } else {
+      loopIcon.classList.remove('active');
+      removeMarkers();
+    }
+  });
 
-  var arrowWidth = arrow1.offsetWidth;
-  var shiftX = arrowWidth / 2;
-  arrow1.addEventListener('mousedown', function (event) {
-    event.preventDefault();
-    var arrow2Left = arrow2.getBoundingClientRect().left;
-    var containerLeft = container.getBoundingClientRect().left;
-    var containerWidth = container.offsetWidth;
-    var newLeft = 0;
+  function disableLoopButton() {
+    controlsActive = false;
+    loopIcon.classList.remove('active');
+    removeMarkers();
+  }
 
-    var onMouseMove = function onMouseMove(event) {
-      if (event.clientX < arrow2Left) {
-        newLeft = event.clientX - shiftX - containerLeft;
-        var rightEdge = containerWidth - arrowWidth;
-        if (newLeft < -2) newLeft = -2;
-        if (newLeft > rightEdge + 2) newLeft = rightEdge + 2;
-        arrow1.style.left = newLeft + 'px';
-      }
+  function removeMarkers() {
+    console.log("Removing loop markers");
+    clearInterval(mainInterval);
+    leftMarker.remove();
+    rightMarker.remove();
+  }
+
+  function insertMarkers(duration) {
+    console.log("Setting up loop markers");
+    var leftTime = 0;
+    var rightTime = duration;
+    leftMarker = document.createElement('div');
+    leftMarker.setAttribute("class", "looper-marker leftMarker");
+    container.appendChild(leftMarker);
+    rightMarker = document.createElement('div');
+    rightMarker.setAttribute("class", "looper-marker rightMarker");
+    container.appendChild(rightMarker);
+
+    leftMarker.ondragstart = function () {
+      return false;
     };
 
-    function onMouseUp(event) {
-      event.preventDefault();
-      var percentage = (100 * newLeft / containerWidth).toFixed(2);
-      arrow1.style.left = percentage + '%';
-      document.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('mousemove', onMouseMove);
-    }
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
-  arrow2.addEventListener('mousedown', function (event) {
-    event.preventDefault();
-    var arrow1Right = arrow1.getBoundingClientRect().right;
-    var containerLeft = container.getBoundingClientRect().left;
-    var containerWidth = container.offsetWidth;
-    var newLeft = 0;
-
-    var onMouseMove = function onMouseMove(event) {
-      arrow1._pos = event.clientX;
-
-      if (event.clientX > arrow1Right) {
-        newLeft = event.clientX - shiftX - containerLeft;
-        var rightEdge = containerWidth - arrowWidth;
-        if (newLeft < -2) newLeft = -2;
-        if (newLeft > rightEdge + 2) newLeft = rightEdge + 2;
-        arrow2.style.left = newLeft + 'px';
-      }
+    rightMarker.ondragstart = function () {
+      return false;
     };
 
-    function onMouseUp(event) {
+    var arrowWidth = leftMarker.offsetWidth;
+    var shiftX = arrowWidth / 2;
+
+    function setPosition(arrow, position) {
+      var left = position - shiftX + 'px';
+      arrow.style.left = left;
+    }
+
+    function getPosition(arrow) {
+      return arrow.offsetLeft + shiftX;
+    }
+
+    leftMarker.addEventListener('mousedown', function (event) {
       event.preventDefault();
-      var percentage = (100 * newLeft / containerWidth).toFixed(2);
-      arrow2.style.left = percentage + '%';
-      document.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('mousemove', onMouseMove);
-    }
+      var rightMarkerposition = getPosition(rightMarker);
+      var containerLeft = container.getBoundingClientRect().left;
+      var containerWidth = container.offsetWidth;
+      var position = 0;
+      document.addEventListener('mousemove', onMouseMove);
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
-  var ro = new ResizeObserver(function (entries) {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+      function onMouseMove(event) {
+        position = event.clientX - containerLeft;
 
-    try {
-      for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var entry = _step.value;
-        console.log(entry);
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
+        if (position < rightMarkerposition && position >= 0 && position <= containerWidth) {
+          setPosition(leftMarker, position);
         }
       }
-    }
-  });
-  ro.observe(container);
+
+      document.addEventListener('mouseup', function (event) {
+        event.preventDefault();
+        var percentage = (100 * leftMarker.offsetLeft / containerWidth).toFixed(3);
+        leftMarker.style.left = percentage + '%';
+        leftTime = duration * parseFloat(percentage) / 100;
+        document.removeEventListener('mousemove', onMouseMove);
+      }, {
+        once: true
+      });
+    });
+    rightMarker.addEventListener('mousedown', function (event) {
+      event.preventDefault();
+      var leftMarkerposition = getPosition(leftMarker);
+      var containerLeft = container.getBoundingClientRect().left;
+      var containerWidth = container.offsetWidth;
+      var position = 0;
+      document.addEventListener('mousemove', onMouseMove);
+
+      function onMouseMove(event) {
+        position = event.clientX - containerLeft;
+
+        if (position > leftMarkerposition && position >= 0 && position <= containerWidth) {
+          setPosition(rightMarker, position);
+        }
+      }
+
+      document.addEventListener('mouseup', function (event) {
+        event.preventDefault();
+        var percentage = (100 * rightMarker.offsetLeft / containerWidth).toFixed(3);
+        rightMarker.style.left = percentage + '%';
+        rightTime = duration * parseFloat(percentage) / 100;
+        document.removeEventListener('mousemove', onMouseMove);
+      }, {
+        once: true
+      });
+    });
+    mainInterval = setInterval(function () {
+      var time = video.currentTime;
+
+      if (time > rightTime || time < leftTime) {
+        video.currentTime = leftTime;
+      }
+    }, 1000);
+    watchForMutations(video);
+  }
+
+  function watchForMutations(container) {
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        if (mutation.type === "attributes" && mutation.attributeName === "src") {
+          if (controlsActive) {
+            disableLoopButton();
+          }
+        }
+      });
+    });
+    observer.observe(container, {
+      attributes: true,
+      childList: false,
+      subtree: false
+    });
+  }
 });
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -255,7 +310,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51747" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50791" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
