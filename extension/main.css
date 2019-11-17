@@ -11,6 +11,10 @@
     border-radius: 50%;
 }
 
+.looper-marker:hover {
+    transform: scale(1.15);
+}
+
 :fullscreen .looper-marker {
     width: 18px;
     height: 18px;
