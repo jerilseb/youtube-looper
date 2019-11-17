@@ -166,7 +166,7 @@ function initialize() {
 
     mainInterval = setInterval(() => {
       let time = video.currentTime;
-      if(time > rightTime || time < leftTime) {
+      if(time > (rightTime - 1) || time < leftTime) {
         video.currentTime = leftTime;
       }
     }, 1000);
