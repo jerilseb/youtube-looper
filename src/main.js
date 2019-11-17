@@ -1,13 +1,45 @@
-window.addEventListener('load', _ => {
-  let container = document.querySelector('div.ytp-chrome-bottom');
-  if(!container) return null;
+window.addEventListener("load", initialize);
+let initialized = false;
 
-  let video = document.getElementsByTagName('video')[0];
-  if(!video) return null;
+function waitForVideo() {
+  var observer = new MutationObserver(mutations => {
+    requestIdleCallback(_ => {
+      mutations.forEach(mutation => {
+        Array.prototype.forEach.call(mutation.addedNodes, node => {
+          if (!initialized && node.nodeName === 'VIDEO') {
+            observer.disconnect();
+            console.log("video added, initializing");
+            initialize();
+          }
+        });
+      });
+    }, {timeout: 1500});
+  });
+  observer.observe(document, { childList: true, subtree: true });
+}
+
+function initialize() {
+  let container = document.querySelector('div.ytp-chrome-bottom');
+  if(!initialized && container === null) {
+    console.log("No container found, waiting for video");
+    waitForVideo();
+    return;
+  };
+
+  let video = container.parentNode.querySelector('video');
+  if(!initialized && video === null) {
+    console.log("No video found, waiting for video");
+    waitForVideo();
+    return;
+  }
+
+  console.log("Initializing looper button")
+  initialized = true;
 
   let mainInterval = null;
   let leftMarker = null;
   let rightMarker = null;
+  
   // if(video.readyState > 1) {
   //   setup(video.duration);
   // } else {
@@ -19,8 +51,6 @@ window.addEventListener('load', _ => {
   let controlsActive = false;
 
   const rightControls = container.querySelector('.ytp-right-controls');
-  console.log(rightControls);
-
   const toggleButton = document.createElement('button');
   toggleButton.setAttribute('class', 'ytp-loop-button ytp-button');
   toggleButton.setAttribute('title', 'Toggle loop controls');
@@ -141,10 +171,10 @@ window.addEventListener('load', _ => {
       }
     }, 1000);
 
-    watchForMutations(video);
+    watchForSouceChange(video);
   }
 
-  function watchForMutations(container) {
+  function watchForSouceChange(container) {
     const observer = new MutationObserver( mutations => {
       mutations.forEach( mutation => {
         if(mutation.type === "attributes" && mutation.attributeName === "src") {
@@ -156,4 +186,4 @@ window.addEventListener('load', _ => {
     });
     observer.observe(container, { attributes: true, childList: false, subtree: false });
   }
-});
+}

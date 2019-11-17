@@ -118,12 +118,51 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"main.js":[function(require,module,exports) {
-window.addEventListener('load', function (_) {
-  console.log("Load event from content script"); // console.log(/youtube/.test(location.href));
+window.addEventListener("load", initialize);
+var initialized = false;
 
+function waitForVideo() {
+  var observer = new MutationObserver(function (mutations) {
+    requestIdleCallback(function (_) {
+      mutations.forEach(function (mutation) {
+        Array.prototype.forEach.call(mutation.addedNodes, function (node) {
+          if (!initialized && node.nodeName === 'VIDEO') {
+            observer.disconnect();
+            console.log("video added, initializing");
+            initialize();
+          }
+        });
+      });
+    }, {
+      timeout: 1500
+    });
+  });
+  observer.observe(document, {
+    childList: true,
+    subtree: true
+  });
+}
+
+function initialize() {
   var container = document.querySelector('div.ytp-chrome-bottom');
-  var video = document.getElementsByTagName('video')[0];
-  console.log(container);
+
+  if (!initialized && container === null) {
+    console.log("No container found, waiting for video");
+    waitForVideo();
+    return;
+  }
+
+  ;
+  var video = container.parentNode.querySelector('video');
+
+  if (!initialized && video === null) {
+    console.log("No video found, waiting for video");
+    waitForVideo();
+    return;
+  }
+
+  console.log("Initializing looper button");
+  initialized = true;
   var mainInterval = null;
   var leftMarker = null;
   var rightMarker = null; // if(video.readyState > 1) {
@@ -136,7 +175,6 @@ window.addEventListener('load', function (_) {
 
   var controlsActive = false;
   var rightControls = container.querySelector('.ytp-right-controls');
-  console.log(rightControls);
   var toggleButton = document.createElement('button');
   toggleButton.setAttribute('class', 'ytp-loop-button ytp-button');
   toggleButton.setAttribute('title', 'Toggle loop controls');
@@ -262,10 +300,10 @@ window.addEventListener('load', function (_) {
         video.currentTime = leftTime;
       }
     }, 1000);
-    watchForMutations(video);
+    watchForSouceChange(video);
   }
 
-  function watchForMutations(container) {
+  function watchForSouceChange(container) {
     var observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
         if (mutation.type === "attributes" && mutation.attributeName === "src") {
@@ -281,7 +319,7 @@ window.addEventListener('load', function (_) {
       subtree: false
     });
   }
-});
+}
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -310,7 +348,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50791" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60177" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
