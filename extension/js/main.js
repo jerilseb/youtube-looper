@@ -234,7 +234,9 @@ function initialize() {
 
     function setPosition(arrow, position) {
       var left = position - shiftX + 'px';
-      arrow.style.left = left;
+      requestAnimationFrame(function () {
+        arrow.style.left = left;
+      });
     }
 
     function getPosition(arrow) {
@@ -296,7 +298,7 @@ function initialize() {
     mainInterval = setInterval(function () {
       var time = video.currentTime;
 
-      if (time > rightTime || time < leftTime) {
+      if (time > rightTime - 1 || time < leftTime) {
         video.currentTime = leftTime;
       }
     }, 1000);
@@ -348,7 +350,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60177" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62622" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

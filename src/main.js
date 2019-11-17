@@ -109,7 +109,9 @@ function initialize() {
   
     function setPosition(arrow, position) {
       let left = (position - shiftX) + 'px';
-      arrow.style.left = left;
+      requestAnimationFrame(() => {
+        arrow.style.left = left;
+      })
     }
   
     function getPosition(arrow) {
