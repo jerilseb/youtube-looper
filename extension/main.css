@@ -44,10 +44,27 @@
     border: 4.5px solid #dddddd;
 }
 
-:fullscreen  .ytp-loop-icon.active {
+:fullscreen  .ytp-button.ytp-loop-button.active .ytp-loop-icon {
     border: 4.5px solid #f00;
 }
 
-.ytp-loop-icon.active {
+.ytp-button.ytp-loop-button.active .ytp-loop-icon {
     border: 3.5px solid #f00;
+}
+
+.ytp-button.ytp-loop-button .loop-hover-tip {
+    display: none;
+    padding: 5px 10px;
+    line-height: 1.2;
+    font-size: 1.1em;
+    font-weight: 500;
+    position: absolute;
+    background: #161616;
+    color: #f1f1f1;
+    border-radius: 2px;
+    transform: translate(-30%, -3.5em);
+}
+
+.ytp-button.ytp-loop-button:hover .loop-hover-tip {
+    display: block;
 }

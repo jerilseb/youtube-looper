@@ -51,15 +51,14 @@ function initialize() {
   let controlsActive = false;
 
   const rightControls = container.querySelector('.ytp-right-controls');
-  const toggleButton = document.createElement('button');
-  toggleButton.setAttribute('class', 'ytp-loop-button ytp-button');
-  toggleButton.setAttribute('title', 'Toggle loop controls');
-  toggleButton.setAttribute('aria-haspopup', true);
-  toggleButton.setAttribute('aria-label', 'Toggle loop controls');
-
-  const loopIcon = document.createElement('div');
-  loopIcon.setAttribute('class', 'ytp-loop-icon');
-  toggleButton.appendChild(loopIcon);
+  const template = document.createElement('template');
+  template.innerHTML = `
+    <button class="ytp-loop-button ytp-button" aria-haspopup=true aria-label="Toggle A-B repeat">
+      <div class="loop-hover-tip">Toggle A-B repeat</div>
+      <div class="ytp-loop-icon"></div>
+    </button>
+  `;
+  const toggleButton = template.content.firstElementChild;
 
   const subtitlesButton = container.querySelector('.ytp-subtitles-button');
   rightControls.insertBefore(toggleButton, subtitlesButton);
@@ -67,10 +66,10 @@ function initialize() {
   toggleButton.addEventListener('click', e => {
     controlsActive = !controlsActive;
     if(controlsActive) {
-      loopIcon.classList.add('active');
+      toggleButton.classList.add('active');
       insertMarkers(video.duration);
     } else {
-      loopIcon.classList.remove('active');
+      toggleButton.classList.remove('active');
       removeMarkers();
     }
   });

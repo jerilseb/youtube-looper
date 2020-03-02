@@ -175,24 +175,19 @@ function initialize() {
 
   var controlsActive = false;
   var rightControls = container.querySelector('.ytp-right-controls');
-  var toggleButton = document.createElement('button');
-  toggleButton.setAttribute('class', 'ytp-loop-button ytp-button');
-  toggleButton.setAttribute('title', 'Toggle loop controls');
-  toggleButton.setAttribute('aria-haspopup', true);
-  toggleButton.setAttribute('aria-label', 'Toggle loop controls');
-  var loopIcon = document.createElement('div');
-  loopIcon.setAttribute('class', 'ytp-loop-icon');
-  toggleButton.appendChild(loopIcon);
+  var template = document.createElement('template');
+  template.innerHTML = "\n    <button class=\"ytp-loop-button ytp-button\" aria-haspopup=true aria-label=\"Toggle A-B repeat\">\n      <div class=\"loop-hover-tip\">Toggle A-B repeat</div>\n      <div class=\"ytp-loop-icon\"></div>\n    </button>\n  ";
+  var toggleButton = template.content.firstElementChild;
   var subtitlesButton = container.querySelector('.ytp-subtitles-button');
   rightControls.insertBefore(toggleButton, subtitlesButton);
   toggleButton.addEventListener('click', function (e) {
     controlsActive = !controlsActive;
 
     if (controlsActive) {
-      loopIcon.classList.add('active');
+      toggleButton.classList.add('active');
       insertMarkers(video.duration);
     } else {
-      loopIcon.classList.remove('active');
+      toggleButton.classList.remove('active');
       removeMarkers();
     }
   });
@@ -350,7 +345,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62674" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55499" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
