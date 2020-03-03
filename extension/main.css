@@ -33,7 +33,7 @@
 .ytp-loop-icon {
     width: 10px;
     height: 10px;
-    border: 3.5px solid #dddddd;
+    border: 3.5px solid #eaeaea;
     border-radius: 50%;
     margin: auto;
 }
@@ -41,7 +41,7 @@
 :fullscreen  .ytp-loop-icon {
     width: 16px;
     height: 16px;
-    border: 4.5px solid #dddddd;
+    border: 4.5px solid #eaeaea;
 }
 
 :fullscreen  .ytp-button.ytp-loop-button.active .ytp-loop-icon {
@@ -62,7 +62,7 @@
     background: #161616;
     color: #f1f1f1;
     border-radius: 2px;
-    transform: translate(-30%, -3.5em);
+    transform: translate(-30%, -3.6em);
 }
 
 .ytp-button.ytp-loop-button:hover .loop-hover-tip {

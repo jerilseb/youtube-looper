@@ -8,7 +8,6 @@ function waitForVideo() {
         Array.prototype.forEach.call(mutation.addedNodes, node => {
           if (!initialized && node.nodeName === 'VIDEO') {
             observer.disconnect();
-            console.log("video added, initializing");
             initialize();
           }
         });
@@ -21,19 +20,16 @@ function waitForVideo() {
 function initialize() {
   let container = document.querySelector('div.ytp-chrome-bottom');
   if(!initialized && container === null) {
-    console.log("No container found, waiting for video");
     waitForVideo();
     return;
   };
 
   let video = container.parentNode.querySelector('video');
   if(!initialized && video === null) {
-    console.log("No video found, waiting for video");
     waitForVideo();
     return;
   }
 
-  console.log("Initializing looper button")
   initialized = true;
 
   let mainInterval = null;
@@ -76,19 +72,17 @@ function initialize() {
 
   function disableLoopButton() {
     controlsActive = false;
-    loopIcon.classList.remove('active');
+    toggleButton.classList.remove('active');
     removeMarkers();
   }
 
   function removeMarkers() {
-    console.log("Removing loop markers");
     clearInterval(mainInterval);
     leftMarker.remove();
     rightMarker.remove();
   }
 
   function insertMarkers(duration) {
-    console.log("Setting up loop markers");
     let leftTime = 0;
     let rightTime = duration;
 

@@ -128,7 +128,6 @@ function waitForVideo() {
         Array.prototype.forEach.call(mutation.addedNodes, function (node) {
           if (!initialized && node.nodeName === 'VIDEO') {
             observer.disconnect();
-            console.log("video added, initializing");
             initialize();
           }
         });
@@ -147,7 +146,6 @@ function initialize() {
   var container = document.querySelector('div.ytp-chrome-bottom');
 
   if (!initialized && container === null) {
-    console.log("No container found, waiting for video");
     waitForVideo();
     return;
   }
@@ -156,12 +154,10 @@ function initialize() {
   var video = container.parentNode.querySelector('video');
 
   if (!initialized && video === null) {
-    console.log("No video found, waiting for video");
     waitForVideo();
     return;
   }
 
-  console.log("Initializing looper button");
   initialized = true;
   var mainInterval = null;
   var leftMarker = null;
@@ -194,19 +190,17 @@ function initialize() {
 
   function disableLoopButton() {
     controlsActive = false;
-    loopIcon.classList.remove('active');
+    toggleButton.classList.remove('active');
     removeMarkers();
   }
 
   function removeMarkers() {
-    console.log("Removing loop markers");
     clearInterval(mainInterval);
     leftMarker.remove();
     rightMarker.remove();
   }
 
   function insertMarkers(duration) {
-    console.log("Setting up loop markers");
     var leftTime = 0;
     var rightTime = duration;
     leftMarker = document.createElement('div');
@@ -345,7 +339,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55499" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50713" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
