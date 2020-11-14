@@ -50,7 +50,7 @@ function initialize() {
   const template = document.createElement('template');
   template.innerHTML = `
     <button class="ytp-loop-button ytp-button" aria-haspopup=true aria-label="Toggle A-B repeat">
-      <div class="loop-hover-tip">Toggle A-B repeat</div>
+      <div class="loop-hover-tip">Toggle Loop</div>
       <div class="ytp-loop-icon"></div>
     </button>
   `;
